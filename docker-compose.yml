@@ -41,8 +41,6 @@ services:
     container_name: pyspark-notebook
     ports:
       - 127.0.0.1:8888:8888
-    volumes:
-      - ./work:/home/jovyan/work
     environment:
       - JUPYTER_ENABLE_LAB=yes
     networks:

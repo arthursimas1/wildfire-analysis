@@ -4,10 +4,8 @@ Brazilian wildfire analysis based on Apache Spark + Apache Kudu + Jupyter Notebo
 # Setup and Run
 
 ```bash
-git clone https://github.com/arthursimas1/wildfire-analysis.git
+git clone --branch latest https://github.com/arthursimas1/wildfire-analysis.git
 cd wildfire-analysis
-git checkout tags/latest
-
 docker-compose up -d
 ```
 
