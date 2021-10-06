@@ -1,0 +1,54 @@
+version: '3.5'
+
+services:
+  kudu-master-1:
+    image: apache/kudu:1.15
+    container_name: kudu-master-1
+    ports:
+      - 7051
+      - 8051
+    command: ["master"]
+    environment:
+      - KUDU_MASTERS=kudu-master-1:7051
+    networks:
+      - kudu-net
+  kudu-tserver:
+    image: apache/kudu:1.15
+    depends_on:
+      - kudu-master-1
+    ports:
+      - 7050
+      - 8050
+    command: ["tserver"]
+    environment:
+      - KUDU_MASTERS=kudu-master-1:7051
+    networks:
+      - kudu-net
+    deploy:
+      replicas: 3
+  impala:
+    image: apache/kudu:impala-latest
+    container_name: impala
+    depends_on:
+      - kudu-master-1
+    command: ["impala"]
+    environment:
+      - KUDU_MASTERS=kudu-master-1:7051
+    networks:
+      - kudu-net
+  pyspark-notebook:
+    image: jupyter/pyspark-notebook
+    container_name: pyspark-notebook
+    ports:
+      - 127.0.0.1:8888:8888
+    volumes:
+      - ./work:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    networks:
+      - kudu-net
+
+networks:
+  kudu-net:
+    name: kudu-net
+    driver: bridge
